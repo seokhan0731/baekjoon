@@ -3,6 +3,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
+/**
+ * 리팩토링 코드
+ * 메소드 분리를 통해 같은 범위의 for 루프를 세 번 도는 비효율 해결 -> 한 번의 for루프에서 최댓값, 총합, 모두 계산
+ * 보정값을 구하기 위한 새로운 배열 선언했던 비효율 해결 -> 계산 공식 정리 시, 보정까지 원큐에 해결 가능하다는 사실 발견
+ *
+ * +) 배열 선언 없이, 진행 가능!
+ */
 public class Main {
     static double calculate(int arr[]) {
         int sum = 0;
@@ -34,12 +41,11 @@ public class Main {
         sb.append(average);
         System.out.println(sb);
     }
-
 }
 
 
 /**
- * 기존 풀이
+ * 기존 코드
  * 1. 배열을 통해 입력 받기
  * 2. 최댓값 탐색, 보정, 평균 구하는 메소드 내부에서 각각 반복문을 돌고, 추가적인 메모리를 더 쓰는 비효율 존재
  *
