@@ -2,22 +2,18 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 
 public class Main {
+    static final int INF = 9999;
+
     static void getMinimumWay(int[] array) {
-        for (int i = 5; i < array.length; i++) {
-            if (array[i - 3] == -1 && array[i - 5] == -1) {
-                array[i] = -1;
-                continue;
-            }   //array[i-3]!=-1 || array[i-5]!=-1
-            else if (array[i - 3] != -1 && array[i - 5] == -1) {
-                array[i] = array[i - 3] + 1;
-            }
-            else if (array[i - 5] != -1 && array[i - 3] == -1) {
-                array[i] = array[i - 5] + 1;
-            }
-            else {
-                array[i] = Math.min(array[i - 3], array[i - 5]) + 1;
+        array[0] = 0;
+        for (int i = 3; i < array.length; i++) {
+            array[i] = Math.min(array[i - 3] + 1, array[i]);
+            
+            if (i >= 5) {
+                array[i] = Math.min(array[i - 5] + 1, array[i]);
             }
         }
     }
@@ -28,17 +24,16 @@ public class Main {
 
         int n = Integer.parseInt(br.readLine());
         int[] array = new int[n + 1];
-
-        array[0] = 0;
-        array[1] = -1;
-        array[2] = -1;
+        Arrays.fill(array, INF);
 
 
-        array[3] = 1;
-        if (n > 3) {
-            array[4] = -1;
-            getMinimumWay(array);
+        getMinimumWay(array);
+
+        int target = array[n];
+        if (target != INF) {
+            System.out.println(target);
+            return;
         }
-        System.out.println(array[n]);
+        System.out.println(-1);
     }
 }
