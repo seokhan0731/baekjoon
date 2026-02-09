@@ -2,8 +2,47 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 
+/**
+ * 코드 3. 그리디 알고리즘 사용
+ * 코드1, 2는 DP를 사용하여 해결, 해당 문제는 [1463. 1로 만들기]와 비슷해보이지만 그리디 활용 가능
+ * '1로 만들기'에서는 세 가지 선택이 존재하며, 1을 빼는 경우, 최선의 선택이 3으로 나누는 것인지,
+ *  2로 나누는 것인지에 대해 판별 불가능 -> 주어진 조건에서 조건에 맞춘 최선의 선택 불가
+ *      but 해당 문제에서는 5로 나누어떨어진다면 5로 나누어버리고, 그게 아니면 3을 뺀다라는 단일 최선의 행동 존재
+ *
+ * +) 처음에는 해당 문제를 그리디 알고리즘으로 풀 수 있다는 사실에, 5를 뺄 수 있다면, 5를 뺀다라는 선택으로 구현하고자 했으니,
+ *     11과 같은 예외가 존재한다는 것을 파악
+ *     결국 해당 문제는 5i+3k에서 i를 최대로 만들거나, k를 최소화하는 두 가지 루트가 있는데, i를 매번 증가시키며, 확인하는 것보다,
+ *     역으로 접근하여, k를 증가시키면서 i의 자리를 찾는 것이 올바른 최선의 선택이 된다.
+ *
+ * 그리디를 단순히 크기를 중요시하지 않고, 기준을 생각해야된다. 기준의 최우선 순위를 잡고, 그 상태에 맞게 행동을 한다면,
+ * 그게 곧 최선의 선택이지, 단순히 크기만 생각한다면, 거스름돈 문제같은 그리디 알고리즘 문제만 해결 가능하지, 이러한 그리디 알고리즘은 해결 불가
+ */
+public class Main2 {
+    static int getMinimumWayByGreedy(int target) {
+        int count = 0;
+        while (target >= 0) {
+            if (target % 5 == 0) {
+                count += target / 5;
+                break;
+            }
+            target -= 3;
+            count++;
+        }
+        if (target < 0) {
+            return -1;
+        }
+        return count;
+    }
+
+    public static void main(String[] args) throws IOException {
+        System.setIn(new FileInputStream("input.txt"));
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+        int n = Integer.parseInt(br.readLine());
+        System.out.println(getMinimumWayByGreedy(n));
+    }
+}
 /**
  * 코드 2. 탑다운 방식 이용
  * 바텀업 방식과는 별개로, 두 가지 상수값을 정의하여 사용하였다.
@@ -17,45 +56,45 @@ import java.util.Arrays;
  * idx가 0인 경우->메모이제이션 확인->3보다 큰 경우->5보다 큰 경우 비교하기 순을 거쳤지만,
  * 메모이제이션에서 단순히 INF인 경우, 진짜 방문을 한건지, 값을 못 구하는지 알 방도가 없어서 다음과 같이 코드를 수정
  */
-public class Main2 {
-    static final int INF = 9999;
-    static final int NONVISITED = -1;
-
-    static int getMinimumWay(int[] array, int targetIdx) {
-        if (targetIdx < 0) {
-            return INF;
-        }
-        if (targetIdx == 0) {
-            return 0;
-        }
-
-        if (array[targetIdx] != NONVISITED) {
-            return array[targetIdx];
-        }
-
-        array[targetIdx] = Math.min(getMinimumWay(array, targetIdx - 3),
-                getMinimumWay(array, targetIdx - 5)) + 1;
-
-        return array[targetIdx];
-    }
-
-    public static void main(String[] args) throws IOException {
-        System.setIn(new FileInputStream("input.txt"));
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
-        int n = Integer.parseInt(br.readLine());
-        int[] array = new int[n + 1];
-
-        Arrays.fill(array, NONVISITED);
-
-        int answer = getMinimumWay(array, n);
-        if (answer >= INF) {
-            System.out.println(answer);
-            return;
-        }
-        System.out.println(-1);
-    }
-}
+//public class Main2 {
+//    static final int INF = 9999;
+//    static final int NONVISITED = -1;
+//
+//    static int getMinimumWay(int[] array, int targetIdx) {
+//        if (targetIdx < 0) {
+//            return INF;
+//        }
+//        if (targetIdx == 0) {
+//            return 0;
+//        }
+//
+//        if (array[targetIdx] != NONVISITED) {
+//            return array[targetIdx];
+//        }
+//
+//        array[targetIdx] = Math.min(getMinimumWay(array, targetIdx - 3),
+//                getMinimumWay(array, targetIdx - 5)) + 1;
+//
+//        return array[targetIdx];
+//    }
+//
+//    public static void main(String[] args) throws IOException {
+//        System.setIn(new FileInputStream("input.txt"));
+//        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+//
+//        int n = Integer.parseInt(br.readLine());
+//        int[] array = new int[n + 1];
+//
+//        Arrays.fill(array, NONVISITED);
+//
+//        int answer = getMinimumWay(array, n);
+//        if (answer >= INF) {
+//            System.out.println(answer);
+//            return;
+//        }
+//        System.out.println(-1);
+//    }
+//}
 
 /**
  * 기존 풀이
