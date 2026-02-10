@@ -2,30 +2,36 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
 
-public class Main {
-    static int[] array = new int[12];
+/**
+ * 코드2. 배열을 통한 바텀업 방식의 dp구현
+ * 기존 코드에서 hashmap을 사용했던 이유는, 배열의 크기가 고정된 형태가 아닌,
+ * 첫 입력으로 주어진 n개의 케이스에 따라, 가변적이기 때문에, 크기 조절이 번거로운 array를 사용하지 않았던 것이지만,
+ * 해당 문제의 입력값은 11까지로 제한이 되어있기 때문에, 그냥 고정된 배열 크기로 짠 후, 모든 케이스를 dp로 구한 후,
+ * 필요한 값을 꺼내 사용하는 것이 비용적으로 유리
+ */
+public class Main2 {
+    static int[] dp = new int[12];
     static StringBuilder sb = new StringBuilder();
 
     static void calculateNumberOfCases() {
-        array[1] = 1;
-        array[2] = 2;
-        array[3] = 4;
+        dp[1] = 1;
+        dp[2] = 2;
+        dp[3] = 4;
 
-        for (int i = 4; i < array.length; i++) {
-            array[i] = array[i - 1] + array[i - 2] + array[i - 3];
+        for (int i = 4; i < dp.length; i++) {
+            dp[i] = dp[i - 1] + dp[i - 2] + dp[i - 3];
         }
     }
 
     public static void main(String[] args) throws IOException {
-//        System.setIn(new FileInputStream("input.txt"));
+        System.setIn(new FileInputStream("input.txt"));
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
         int n = Integer.parseInt(br.readLine());
         calculateNumberOfCases();
         for (int i = 0; i < n; i++) {
-            sb.append(array[Integer.parseInt(br.readLine())]).append('\n');
+            sb.append(dp[Integer.parseInt(br.readLine())]).append('\n');
         }
         System.out.println(sb);
     }
