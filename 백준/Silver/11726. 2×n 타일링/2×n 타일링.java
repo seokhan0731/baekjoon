@@ -5,6 +5,42 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 
 /**
+ * 코드2. 탑다운 방식의 dp사용
+ * 기존 코드와 로직과 동일하게, dp[n]=dp[n-2]+dp[n-1]의 점화식을 사용했고,
+ * 재귀의 종료 조건을 idx=0, 1인 경우, 1을 뱉어 idx=2인 경우 2가 되게끔 코드 구성
+ *
+ * 형재는 Integer[]로 선언하여, null로 초기값을 할당하였지만,
+ * int[]로 하여 INF값을 나누는 수인 10007 이상의 값으로 설정하여, 메모이제이션을 사용하였다면,
+ * 성능적으로 더 우수한 코드를 완성 했을듯?(객체 생성 비용X)
+ */
+public class Main {
+    static final int divideNumber = 10007;
+
+    static int getNumberOfCases(Integer[] dp, int targetIndex) {
+        if (targetIndex == 1 || targetIndex == 0) {
+            return 1;
+        }
+        if (dp[targetIndex] != null) {
+            return dp[targetIndex];
+        }
+
+        dp[targetIndex] = (getNumberOfCases(dp, targetIndex - 1)
+                + getNumberOfCases(dp, targetIndex - 2)) % divideNumber;
+
+        return dp[targetIndex];
+    }
+
+    public static void main(String[] args) throws IOException {
+//        System.setIn(new FileInputStream("input.txt"));
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(br.readLine());
+        Integer[] dp = new Integer[n + 1];
+
+        System.out.println(getNumberOfCases(dp, n));
+    }
+}
+
+/**
  * 기존 코드. 바텀업 방식의 dp 사용
  * 결국 해당 문제에서 타일을 채우는 경우는 두 가지이다.
  * 1*2 타일을 두 개를 배치하여, 2*2 사이즈를 채우는 방법과, 2*1의 타일을 단일로 배치하여 2*1 사이즈를 채우는 방법이디.
@@ -52,3 +88,4 @@ public class Main {
     }
 
 }
+
